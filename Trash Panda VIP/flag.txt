@@ -1,0 +1,1 @@
+uj_ctf{tr4sh_p4nd4_byp4ss3d_th3_jwt}

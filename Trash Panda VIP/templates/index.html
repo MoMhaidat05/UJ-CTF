@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trash Panda VIP</title>
+    <style>
+        body { 
+            background-color: #111; 
+            color: #fff; 
+            font-family: 'Courier New', Courier, monospace; 
+            text-align: center; 
+            margin: 0;
+            padding: 20px;
+        }
+        h1 { 
+            color: #b026ff; 
+            text-shadow: 0 0 10px #b026ff; 
+            font-size: 2.5em;
+        }
+        .neon-green { 
+            color: #39ff14; 
+            text-shadow: 0 0 5px #39ff14; 
+        }
+        .neon-purple { 
+            color: #b026ff; 
+            text-shadow: 0 0 5px #b026ff; 
+        }
+        .token-box { 
+            background: #222; 
+            border: 1px solid #39ff14; 
+            box-shadow: 0 0 10px #39ff14;
+            padding: 20px; 
+            margin: 30px auto; 
+            width: 80%; 
+            max-width: 800px;
+            word-break: break-all;
+            border-radius: 8px;
+        }
+        .header-bg { background-color: rgba(176, 38, 255, 0.2); padding: 2px 5px; border-radius: 3px; }
+        .payload-bg { background-color: rgba(57, 255, 20, 0.2); padding: 2px 5px; border-radius: 3px; }
+        .signature-bg { background-color: rgba(255, 0, 0, 0.2); padding: 2px 5px; border-radius: 3px; }
+        
+        .btn { 
+            background-color: transparent; 
+            color: #b026ff; 
+            border: 2px solid #b026ff; 
+            padding: 12px 25px; 
+            cursor: pointer; 
+            font-size: 18px; 
+            margin-top: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn:hover { 
+            background-color: #b026ff;
+            color: #fff;
+            box-shadow: 0 0 15px #b026ff; 
+        }
+        input[type=text] { 
+            width: 90%; 
+            padding: 15px; 
+            background: #000; 
+            color: #39ff14; 
+            border: 1px solid #b026ff; 
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        input[type=text]:focus {
+            outline: none;
+            box-shadow: 0 0 10px #b026ff;
+        }
+        .decode-section {
+            text-align: left;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🦝 Trash Panda VIP Lounge 🦝</h1>
+    <p class="neon-green">Sneak into the Raccoon King's VIP Trash Lounge...</p>
+    
+    <div class="token-box">
+        <h3 class="neon-purple">Your Current Guest Pass (JWT):</h3>
+        <p id="raw-token" style="font-size: 14px; letter-spacing: 1px;">{{ token }}</p>
+    </div>
+
+    <div class="token-box decode-section">
+        <h3>Live Token Breakdown:</h3>
+        <p><strong>Header (<span class="neon-purple">Base64Url</span>):</strong> <br><span id="jwt-header" class="header-bg"></span></p>
+        <p><strong>Payload (<span class="neon-green">Base64Url</span>):</strong> <br><span id="jwt-payload" class="payload-bg"></span></p>
+        <p><strong>Signature (<span style="color:#ff3333">Base64Url</span>):</strong> <br><span id="jwt-signature" class="signature-bg"></span></p>
+    </div>
+
+    <div class="token-box">
+        <form action="/verify" method="POST">
+            <label for="token"><h3 class="neon-green">Submit your VIP Pass (JWT) here:</h3></label>
+            <input type="text" id="token-input" name="token" placeholder="eyJ..." required>
+            <br>
+            <button type="submit" class="btn">ENTER VIP LOUNGE</button>
+        </form>
+    </div>
+
+    <script>
+        function colorizeToken(tokenStr) {
+            const parts = tokenStr.split('.');
+            if(parts.length >= 2) {
+                let html = `<span style="color: #b026ff;">${parts[0]}</span>.<span style="color: #39ff14;">${parts[1]}</span>`;
+                if(parts.length === 3 && parts[2]) {
+                    html += `.<span style="color: #ff3333;">${parts[2]}</span>`;
+                } else if (parts.length === 3) {
+                    html += `.`;
+                }
+                return html;
+            }
+            return tokenStr;
+        }
+
+        // Display raw token with colors
+        const rawTokenEl = document.getElementById('raw-token');
+        const tokenVal = rawTokenEl.innerText.trim();
+        rawTokenEl.innerHTML = colorizeToken(tokenVal);
+
+        // Decode to show contents
+        function decodeBase64Url(str) {
+            try {
+                // Add padding if necessary
+                str = str.replace(/-/g, '+').replace(/_/g, '/');
+                while (str.length % 4) str += '=';
+                return decodeURIComponent(escape(atob(str)));
+            } catch(e) {
+                return "Error decoding data";
+            }
+        }
+
+        const parts = tokenVal.split('.');
+        if(parts.length >= 2) {
+            document.getElementById('jwt-header').innerText = decodeBase64Url(parts[0]);
+            document.getElementById('jwt-payload').innerText = decodeBase64Url(parts[1]);
+        }
+        if(parts.length === 3) {
+            document.getElementById('jwt-signature').innerText = parts[2] ? parts[2] : "(empty)";
+        }
+    </script>
+</body>
+</html>

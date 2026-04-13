@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The VIP Gate | CTF Warmup</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="scene" id="scene">
+      <div class="gradient-orb orb-a" aria-hidden="true"></div>
+      <div class="gradient-orb orb-b" aria-hidden="true"></div>
+      <div class="particle-field" id="particleField" aria-hidden="true"></div>
+
+      <header class="hud">
+        <h1 class="title">The VIP Gate</h1>
+        <div class="url-readout">
+          <span>Live Request</span>
+          <strong id="urlDisplay">http://localhost:8000/?status=normal</strong>
+        </div>
+        <div class="hint-panel" id="hintPanel">
+          <span class="hint-label">Hint</span>
+          <p>
+            The guard isn't looking for an 'admin'. Look at your status in the URL... he only opens the gate for a <b>V</b>ery <b>I</b>mportant <b>P</b>erson. Can you abbreviate that?
+          </p>
+        </div>
+      </header>
+
+      <main class="arena">
+        <section class="gateway-wrapper" aria-label="Obsidian portal gate">
+          <div class="portal-frame" id="portalFrame">
+            <div class="rune-ring" aria-hidden="true"></div>
+            <div class="portal-doors">
+              <div class="portal-core" aria-hidden="true"></div>
+              <div class="door left-door"></div>
+              <div class="door right-door"></div>
+            </div>
+          </div>
+
+          <div class="flag-display" id="flagDisplay" aria-live="polite">
+            <p class="flag-title">Gate Core Decrypted</p>
+            <p class="flag-value" id="flagValue">Decrypting payload...</p>
+            <div class="flag-actions">
+              <button
+                class="copy-flag-button"
+                id="copyFlagButton"
+                type="button"
+              >
+                Copy Flag
+              </button>
+              <span
+                class="copy-feedback"
+                id="copyFeedback"
+                role="status"
+                aria-live="polite"
+              ></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="guard-zone">
+          <div
+            class="guard"
+            id="guard"
+            role="img"
+            aria-label="Portal security guard"
+          >
+            <div class="guard-shadow"></div>
+            <div class="guard-body">
+              <div class="helmet"></div>
+              <div class="visor"></div>
+              <div class="torso"></div>
+              <div class="badge"></div>
+              <div class="arm arm-left"></div>
+              <div class="arm arm-right"></div>
+              <div class="scanner"></div>
+              <div class="legs">
+                <span class="leg leg-left"></span>
+                <span class="leg leg-right"></span>
+              </div>
+            </div>
+          </div>
+          <p class="status-pill" id="statusPill">Scanner Status: NORMAL USER</p>
+        </section>
+      </main>
+
+      <button class="attempt-button" id="attemptButton" type="button">
+        Attempt to Enter
+      </button>
+    </div>
+
+    <div class="modal-backdrop" id="guardModal" aria-hidden="true">
+      <div
+        class="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <button
+          class="modal-close"
+          id="closeModal"
+          type="button"
+          aria-label="Close dialog"
+        >
+          X
+        </button>
+        <h2 id="modalTitle">Identity Verification</h2>
+
+        <div class="id-card">
+          <div class="id-header">
+            <span class="chip"></span>
+            <p>Portal Access Credential</p>
+          </div>
+          <div class="id-row">
+            <span>Name</span>
+            <strong id="cardName">Guest</strong>
+          </div>
+          <div class="id-row">
+            <span>Status</span>
+            <strong id="cardStatus">Normal User</strong>
+          </div>
+        </div>
+
+        <p class="guard-message" id="guardMessage">
+          Hold it. My scanner shows you are a 'Normal User'. Only those with
+          'VIP' status may pass. Access Denied.
+        </p>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>

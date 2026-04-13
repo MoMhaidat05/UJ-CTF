@@ -12,8 +12,7 @@ def dig():
     file = request.args.get('file')
     if not file:
         return "Missing 'file' parameter", 400
-    
-    # VULNERABLE PATH TRAVERSAL
+
     file_path = os.path.join("public_bones", file)
     
     try:
@@ -22,8 +21,9 @@ def dig():
         return content
     except FileNotFoundError:
         return "Bone not found!", 404
-    except Exception as e:
+    except Exception:
         return "An error occurred excavating the bone.", 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', '5000'))
+    app.run(host='0.0.0.0', port=port, debug=False)

@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, make_response, render_template, request
 
 FLAG = "uj_ctf{c00k1e_m4n1pul4t10n_m4st3r}"
@@ -27,4 +29,5 @@ def admin_panel():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", "5000"))
+    app.run(host="0.0.0.0", port=port, debug=False)

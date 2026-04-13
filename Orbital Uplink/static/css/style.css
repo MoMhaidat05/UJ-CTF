@@ -1,0 +1,181 @@
+:root {
+    --bg-deep: #040913;
+    --bg-mid: #071a2f;
+    --cyan: #5ff7ff;
+    --green: #5bffa8;
+    --text-main: #d5f7ff;
+    --text-dim: #89aebd;
+    --panel: rgba(2, 16, 30, 0.84);
+    --border: rgba(95, 247, 255, 0.35);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at 20% 20%, #10335f 0%, transparent 40%),
+        radial-gradient(circle at 80% 10%, #092845 0%, transparent 45%),
+        linear-gradient(150deg, var(--bg-deep), var(--bg-mid));
+    color: var(--text-main);
+    display: grid;
+    place-items: center;
+    overflow-x: hidden;
+}
+
+.ambient-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(95, 247, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(95, 247, 255, 0.06) 1px, transparent 1px);
+    background-size: 42px 42px;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.ambient-glow {
+    position: fixed;
+    width: 480px;
+    height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(91, 255, 168, 0.22), rgba(91, 255, 168, 0));
+    filter: blur(8px);
+    top: -160px;
+    right: -120px;
+    pointer-events: none;
+}
+
+.uplink-console {
+    width: min(900px, 92vw);
+    margin: 48px auto;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 28px rgba(95, 247, 255, 0.2);
+}
+
+.console-header {
+    margin-bottom: 24px;
+}
+
+.system-tag {
+    margin: 0;
+    color: var(--green);
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+}
+
+h1 {
+    margin: 6px 0 8px;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    color: var(--cyan);
+    text-shadow: 0 0 14px rgba(95, 247, 255, 0.45);
+}
+
+.subtitle {
+    margin: 0;
+    color: var(--text-dim);
+}
+
+.control-panel {
+    padding: 18px;
+    border: 1px solid rgba(91, 255, 168, 0.35);
+    border-radius: 12px;
+    background: rgba(0, 8, 18, 0.82);
+}
+
+#diagnostic-form {
+    display: grid;
+    gap: 12px;
+}
+
+label {
+    color: var(--green);
+    font-weight: 600;
+}
+
+select,
+button {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 1rem;
+}
+
+select {
+    padding: 12px;
+    color: var(--text-main);
+    background: rgba(2, 20, 34, 0.95);
+    outline: none;
+}
+
+select:focus {
+    box-shadow: 0 0 0 2px rgba(95, 247, 255, 0.35);
+}
+
+button {
+    padding: 12px;
+    background: linear-gradient(90deg, #0a7d8a, #16b67f);
+    color: #021117;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 16px rgba(95, 247, 255, 0.5);
+}
+
+.hint {
+    margin: 2px 0 0;
+    font-size: 0.88rem;
+    color: rgba(213, 247, 255, 0.72);
+}
+
+.terminal-panel {
+    margin-top: 20px;
+    border: 1px solid rgba(95, 247, 255, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+}
+
+.terminal-title {
+    padding: 10px 14px;
+    background: linear-gradient(90deg, rgba(95, 247, 255, 0.2), rgba(91, 255, 168, 0.15));
+    color: var(--cyan);
+    font-weight: 600;
+    border-bottom: 1px solid rgba(95, 247, 255, 0.25);
+}
+
+#terminal-output {
+    margin: 0;
+    min-height: 180px;
+    padding: 16px;
+    color: #89f7a8;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: Consolas, "Courier New", monospace;
+}
+
+@media (max-width: 720px) {
+    .uplink-console {
+        margin: 24px auto;
+        padding: 18px;
+    }
+
+    .control-panel,
+    .terminal-panel {
+        border-radius: 10px;
+    }
+}

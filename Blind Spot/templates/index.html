@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blind Spot | Surveillance Console</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <main class="dashboard">
+      <header class="panel-header">
+        <p class="kicker">Municipal Network Surveillance</p>
+        <h1>Blind Spot Monitoring Hub</h1>
+        <p class="subtext">Operator Access Level: Tier 2</p>
+      </header>
+
+      <section class="monitor-shell" aria-label="Camera feed panel">
+        <div class="recording-pill">
+          <span class="dot"></span>
+          REC
+        </div>
+        <div id="screen" class="screen screen-sector-a">
+          <div class="scanlines"></div>
+          <div class="noise"></div>
+          <div class="screen-content">
+            <p class="screen-title">SECTOR A</p>
+            <p id="screen-status" class="screen-status">
+              Signal routing online
+            </p>
+            <p id="screen-clock" class="screen-clock"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="Feed controls">
+        <button
+          class="feed-btn active"
+          data-feed="sector_a"
+          data-label="SECTOR A"
+        >
+          Sector A
+        </button>
+        <button class="feed-btn" data-feed="sector_b" data-label="SECTOR B">
+          Sector B
+        </button>
+        <button class="feed-btn" data-feed="sector_c" data-label="SECTOR C">
+          Sector C
+        </button>
+      </section>
+
+      <section class="endpoint-card" aria-live="polite">
+        <p>Target:</p>
+        <p id="target-endpoint" class="endpoint">/monitor?feed=sector_a</p>
+        <a
+          id="open-endpoint"
+          href="/monitor?feed=sector_a"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Open Feed Endpoint</a
+        >
+      </section>
+
+      <aside class="sticky-note" aria-label="Admin note">
+        <p>
+          Admin Note: The emergency override file is named master_override.txt
+          and is securely stored inside the vault directory. Do NOT map this
+          directory to the monitor feeds.
+        </p>
+      </aside>
+    </main>
+
+    <script>
+      const buttons = document.querySelectorAll(".feed-btn");
+      const targetEl = document.getElementById("target-endpoint");
+      const endpointLink = document.getElementById("open-endpoint");
+      const screen = document.getElementById("screen");
+      const statusEl = document.getElementById("screen-status");
+      const titleEl = document.querySelector(".screen-title");
+      const clockEl = document.getElementById("screen-clock");
+      let switchTimer = null;
+
+      function updateClock() {
+        const now = new Date();
+        clockEl.textContent = now.toLocaleString();
+      }
+
+      function switchFeed(feed, label) {
+        const endpoint = "/monitor?feed=" + encodeURIComponent(feed);
+
+        targetEl.textContent = endpoint;
+        endpointLink.setAttribute("href", endpoint);
+        statusEl.textContent = "Switching to " + label + "...";
+
+        screen.classList.add("switching");
+        clearTimeout(switchTimer);
+        switchTimer = window.setTimeout(() => {
+          titleEl.textContent = label;
+          statusEl.textContent =
+            "Monitoring " + label.toLowerCase() + " channel";
+          screen.classList.remove(
+            "screen-sector-a",
+            "screen-sector-b",
+            "screen-sector-c",
+          );
+          screen.classList.add("screen-" + feed.replace("_", "-"));
+          screen.classList.remove("switching");
+          updateClock();
+        }, 500);
+
+        history.replaceState({}, "", "/?feed=" + encodeURIComponent(feed));
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          buttons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+
+          const feed = button.getAttribute("data-feed");
+          const label = button.getAttribute("data-label");
+          switchFeed(feed, label);
+        });
+      });
+
+      updateClock();
+      setInterval(updateClock, 1000);
+    </script>
+  </body>
+</html>

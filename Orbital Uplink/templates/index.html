@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orbital Uplink</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="ambient-grid"></div>
+    <div class="ambient-glow"></div>
+
+    <main class="uplink-console">
+      <header class="console-header">
+        <p class="system-tag">ORBITAL CONTROL NODE</p>
+        <h1>Orbital Uplink</h1>
+        <p class="subtitle">Deep-space satellite diagnostic interface</p>
+      </header>
+
+      <section class="control-panel">
+        <form id="diagnostic-form" autocomplete="off">
+          <label for="target_satellite">Target Satellite</label>
+          <select id="target_satellite" name="target_satellite" required>
+            <option value="Sat-Alpha">Sat-Alpha</option>
+            <option value="Sat-Beta">Sat-Beta</option>
+            <option value="Sat-Gamma">Sat-Gamma</option>
+          </select>
+
+          <button type="submit">Initiate Diagnostic</button>
+
+          <p class="hint">
+            Terminal input is disabled for security. Operators must use the
+            pre-defined selection interface only.
+          </p>
+        </form>
+      </section>
+
+      <section class="terminal-panel">
+        <div class="terminal-title">Terminal Output</div>
+        <pre id="terminal-output">Awaiting diagnostic command...</pre>
+      </section>
+    </main>
+
+    <script>
+      const diagnosticForm = document.getElementById("diagnostic-form");
+      const terminalOutput = document.getElementById("terminal-output");
+
+      diagnosticForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        terminalOutput.textContent =
+          "[uplink] Dispatching diagnostic routine...";
+
+        const formData = new FormData(diagnosticForm);
+
+        try {
+          const response = await fetch("/diagnostic", {
+            method: "POST",
+            body: formData,
+          });
+
+          const outputText = await response.text();
+          terminalOutput.textContent =
+            outputText || "[uplink] No output returned.";
+        } catch (error) {
+          terminalOutput.textContent = "[error] " + error.message;
+        }
+      });
+    </script>
+  </body>
+</html>
